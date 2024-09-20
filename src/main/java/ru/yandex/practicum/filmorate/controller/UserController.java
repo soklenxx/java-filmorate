@@ -17,11 +17,13 @@ import java.util.Collection;
 
 import java.util.HashMap;
 import java.util.Map;
+
 @Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
     private final Map<Integer, User> users = new HashMap<>();
+
     @GetMapping
     public Collection<User> findAll() {
         log.info("Request to get Users");
