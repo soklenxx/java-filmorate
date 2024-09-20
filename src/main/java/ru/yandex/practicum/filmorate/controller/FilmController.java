@@ -24,7 +24,7 @@ import java.util.Map;
 @RequestMapping("/films")
 public class FilmController {
 
-    private final int MAX_LENGHT_DESCRIPTION = 199;
+    private final int MAX_LENGTH_DESCRIPTION = 199;
     private final LocalDate MIN_DATE_RELEASE = LocalDate.parse("1995-12-28");
     private final Map<Integer, Film> films = new HashMap<>();
 
@@ -42,7 +42,7 @@ public class FilmController {
             log.error("Empty Film name");
             throw new ConditionsNotMetException("Название не может быть пустым");
         }
-        if (film.getDescription().length() > MAX_LENGHT_DESCRIPTION) {
+        if (film.getDescription().length() > MAX_LENGTH_DESCRIPTION) {
             log.error("Maximum description length is 200 characters");
             throw new ConditionsNotMetException("Mаксимальная длина описания — 200 символов");
         }
@@ -74,7 +74,7 @@ public class FilmController {
                 log.error("Empty Film name");
                 throw new ConditionsNotMetException("Название не может быть пустым");
             }
-            if (film.getDescription().length() > MAX_LENGHT_DESCRIPTION) {
+            if (film.getDescription().length() > MAX_LENGTH_DESCRIPTION) {
                 log.error("Maximum description length is 200 characters");
                 throw new ConditionsNotMetException("Mаксимальная длина описания — 200 символов");
             }
