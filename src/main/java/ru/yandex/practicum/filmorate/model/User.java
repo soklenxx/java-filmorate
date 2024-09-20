@@ -9,13 +9,13 @@ import java.time.Instant;
 import java.time.LocalDate;
 
 /**
- * Film.
+ * User.
  */
 @Data
-public class Film {
+public class User {
     private Integer id;
+    private String email;
+    private String login;
     private String name;
-    private String description;
-    private LocalDate releaseDate;
-    private int duration;
+    private LocalDate birthday;
 }
