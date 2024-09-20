@@ -15,13 +15,13 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
 @Slf4j
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-
     private final int MAX_LENGTH_DESCRIPTION = 199;
-    private final LocalDate MIN_DATE_RELEASE = LocalDate.parse("1995-12-28");
+    private final LocalDate MIN = LocalDate.parse("1995-12-28");
     private final Map<Integer, Film> films = new HashMap<>();
 
     @GetMapping
@@ -42,7 +42,7 @@ public class FilmController {
             log.error("Maximum description length is 200 characters");
             throw new ConditionsNotMetException("Mаксимальная длина описания — 200 символов");
         }
-        if (film.getReleaseDate().isAfter(MIN_DATE_RELEASE)) {
+        if (film.getReleaseDate().isAfter(MIN)) {
             log.error("Release date: no earlier than December 28, 1895");
             throw new ConditionsNotMetException("Дата релиза — не раньше 28 декабря 1895 года");
         }
@@ -74,7 +74,7 @@ public class FilmController {
                 log.error("Maximum description length is 200 characters");
                 throw new ConditionsNotMetException("Mаксимальная длина описания — 200 символов");
             }
-            if (film.getReleaseDate().isAfter(MIN_DATE_RELEASE)) {
+            if (film.getReleaseDate().isAfter(MIN)) {
                 log.error("Release date: no earlier than December 28, 1895");
                 throw new ConditionsNotMetException("Дата релиза — не раньше 28 декабря 1895 года");
             }
