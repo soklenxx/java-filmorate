@@ -51,9 +51,9 @@ public class UserService {
     public List<User> getCommonFriends (Long userId, Long friendId) {
         User user = userStorage.getUserById(userId);
         User friend = userStorage.getUserById(friendId);
-        Set<Long> commonFriends = userStorage.getUserById(userId).getFriends();
+        Set<Long> commonFriends = userStorage.getUserById(user.getId()).getFriends();
         List<User> commonFriendsSet = new ArrayList<>();
-        commonFriends.retainAll(userStorage.getUserById(friendId).getFriends());
+        commonFriends.retainAll(userStorage.getUserById(friend.getId()).getFriends());
         for(Long commonFriend : commonFriends) {
             commonFriendsSet.add(userStorage.getUserById(commonFriend));
         }
