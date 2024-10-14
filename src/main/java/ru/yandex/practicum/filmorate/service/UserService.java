@@ -23,7 +23,7 @@ public class UserService {
     public User createUser(User user) {
         return userStorage.createUser(user);
     }
-    
+
     public User updateUser(User user) {
         return userStorage.updateUser(user);
     }
@@ -55,7 +55,7 @@ public class UserService {
         Set<Long> commonFriends = userStorage.getUserById(user.getId()).getFriends();
         List<User> commonFriendsSet = new ArrayList<>();
         commonFriends.retainAll(userStorage.getUserById(friend.getId()).getFriends());
-        for(Long commonFriend : commonFriends) {
+        for (Long commonFriend : commonFriends) {
             commonFriendsSet.add(userStorage.getUserById(commonFriend));
         }
         return commonFriendsSet;
