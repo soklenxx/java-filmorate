@@ -23,11 +23,12 @@ public class UserService {
     public User createUser(User user) {
         return userStorage.createUser(user);
     }
+    
     public User updateUser(User user) {
         return userStorage.updateUser(user);
     }
 
-    public User addFriend (Long userId, Long friendId) {
+    public User addFriend(Long userId, Long friendId) {
         User user = userStorage.getUserById(userId);
         User friend = userStorage.getUserById(friendId);
         user.getFriends().add(friend.getId());
@@ -35,7 +36,7 @@ public class UserService {
         return user;
     }
 
-    public User removeFriend (Long userId, Long friendId) {
+    public User removeFriend(Long userId, Long friendId) {
         User user = userStorage.getUserById(userId);
         User friend = userStorage.getUserById(friendId);
         user.getFriends().remove(friend.getId());
@@ -43,12 +44,12 @@ public class UserService {
         return user;
     }
 
-    public Set<Long> getFriends (Long userId) {
+    public Set<Long> getFriends(Long userId) {
         User user = userStorage.getUserById(userId);
         return user.getFriends();
     }
 
-    public List<User> getCommonFriends (Long userId, Long friendId) {
+    public List<User> getCommonFriends(Long userId, Long friendId) {
         User user = userStorage.getUserById(userId);
         User friend = userStorage.getUserById(friendId);
         Set<Long> commonFriends = userStorage.getUserById(user.getId()).getFriends();
