@@ -44,9 +44,9 @@ public class UserService {
         return user;
     }
 
-    public Set<Long> getFriends(Long userId) {
+    public List<User> getFriends(Long userId) {
         User user = userStorage.getUserById(userId);
-        return user.getFriends();
+        return user.getFriends().stream().map(userStorage::getUserById).toList();
     }
 
     public List<User> getCommonFriends(Long userId, Long friendId) {
