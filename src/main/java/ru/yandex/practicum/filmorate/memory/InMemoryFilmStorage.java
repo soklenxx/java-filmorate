@@ -16,8 +16,8 @@ import java.util.Map;
 @Slf4j
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
-    private final static int MAX_LENGTH_DESCRIPTION = 200;
-    private final static LocalDate MIN_DATE_RELEASE = LocalDate.parse("1895-12-28");
+    private static final int MAX_LENGTH_DESCRIPTION = 200;
+    private static final LocalDate MIN_DATE_RELEASE = LocalDate.parse("1895-12-28");
     private final Map<Long, Film> films = new HashMap<>();
 
     @Override
