@@ -16,7 +16,7 @@ import java.util.Map;
 @Slf4j
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
-    private final int MAX_LENGTH_DESCRIPTION = 200;
+    private final int LENGTH = 200;
     private final LocalDate minDateRelease = LocalDate.parse("1895-12-28");
     private final Map<Long, Film> films = new HashMap<>();
 
@@ -68,7 +68,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             log.error("Empty Film name");
             throw new ValidationException("Название не может быть пустым");
         }
-        if (film.getDescription().length() >= MAX_LENGTH_DESCRIPTION) {
+        if (film.getDescription().length() >= LENGTH) {
             log.error("Maximum description length is 200 characters");
             throw new ValidationException("Mаксимальная длина описания — 200 символов");
         }
