@@ -17,7 +17,7 @@ import java.util.Map;
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
     private final static int MAX_LENGTH_DESCRIPTION = 200;
-    private final LocalDate minDateRelease = LocalDate.parse("1895-12-28");
+    private final static LocalDate MIN_DATE_RELEASE = LocalDate.parse("1895-12-28");
     private final Map<Long, Film> films = new HashMap<>();
 
     @Override
@@ -72,7 +72,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             log.error("Maximum description length is 200 characters");
             throw new ValidationException("Mаксимальная длина описания — 200 символов");
         }
-        if (film.getReleaseDate().isBefore(minDateRelease)) {
+        if (film.getReleaseDate().isBefore(MIN_DATE_RELEASE)) {
             log.error("Release date: no earlier than December 28, 1895");
             throw new ValidationException("Дата релиза — не раньше 28 декабря 1895 года");
         }
