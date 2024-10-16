@@ -1,104 +1,52 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ru.yandex.practicum.filmorate.exceptions.ConditionsNotMetException;
-import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
-import java.time.LocalDate;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/films")
 public class FilmController {
-    private final int maxLengthDescription = 199;
-    private final LocalDate minDateRelease = LocalDate.parse("1895-12-28");
-    private final Map<Integer, Film> films = new HashMap<>();
+
+    private final FilmService filmService;
 
     @GetMapping
-    public Collection<Film> findAll() {
-        log.info("Request to get Films");
-        return films.values();
+    public ResponseEntity<Collection<Film>> findAll() {
+        return ResponseEntity.ok(filmService.findAllFilms());
     }
 
     @PostMapping
-    public Film create(@RequestBody Film film) {
-        log.info("Request to create Film by name {}", film.getName());
-        // проверяем выполнение необходимых условий
-        if (film.getName() == null || film.getName().isEmpty()) {
-            log.error("Empty Film name");
-            throw new ConditionsNotMetException("Название не может быть пустым");
-        }
-        if (film.getDescription().length() > maxLengthDescription) {
-            log.error("Maximum description length is 200 characters");
-            throw new ConditionsNotMetException("Mаксимальная длина описания — 200 символов");
-        }
-        if (film.getReleaseDate().isBefore(minDateRelease)) {
-            log.error("Release date: no earlier than December 28, 1895");
-            throw new ConditionsNotMetException("Дата релиза — не раньше 28 декабря 1895 года");
-        }
-        if (film.getDuration() < 0) {
-            log.error("The length of the movie must be a positive number.");
-            throw new ConditionsNotMetException("Продолжительность фильма должна быть положительным числом.");
-        }
-        // формируем дополнительные данные
-        film.setId(getNextId());
-        // сохраняем новую публикацию в памяти приложения
-        films.put(film.getId(), film);
-        return film;
+    public ResponseEntity<Film> create(@RequestBody Film film) {
+        return ResponseEntity.ok(filmService.createFilm(film));
+
     }
 
     @PutMapping
-    public Film update(@RequestBody Film film) {
-        // проверяем необходимые условия
-        if (film.getId() == null) {
-            throw new ConditionsNotMetException("Id должен быть указан");
-        }
-        log.info("Request to update Film by id {}", film.getId());
-        if (films.containsKey(film.getId())) {
-            Film oldFilm = films.get(film.getId());
-            if (film.getName() == null || film.getName().isEmpty()) {
-                log.error("Empty Film name");
-                throw new ConditionsNotMetException("Название не может быть пустым");
-            }
-            if (film.getDescription().length() > maxLengthDescription) {
-                log.error("Maximum description length is 200 characters");
-                throw new ConditionsNotMetException("Mаксимальная длина описания — 200 символов");
-            }
-            if (film.getReleaseDate().isBefore(minDateRelease)) {
-                log.error("Release date: no earlier than December 28, 1895");
-                throw new ConditionsNotMetException("Дата релиза — не раньше 28 декабря 1895 года");
-            }
-            if (film.getDuration() < 0) {
-                log.error("The length of the movie must be a positive number.");
-                throw new ConditionsNotMetException("Продолжительность фильма должна быть положительным числом.");
-            }
-            oldFilm.setName(film.getName());
-            oldFilm.setDuration(film.getDuration());
-            oldFilm.setDescription(film.getDescription());
-            oldFilm.setReleaseDate(film.getReleaseDate());
-            return oldFilm;
-            }
-
-        throw new NotFoundException("Фильм с id = " + film.getId() + " не найден");
+    public ResponseEntity<Film> update(@RequestBody Film film) {
+        return ResponseEntity.ok(filmService.updateFilm(film));
     }
 
-    // вспомогательный метод для генерации идентификатора нового поста
-    private int getNextId() {
-        int currentMaxId = films.keySet()
-                .stream()
-                .mapToInt(id -> id)
-                .max()
-                .orElse(0);
-        return ++currentMaxId;
+    @PutMapping("/{id}/like/{userId}")
+    public Film addLike(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
+        return filmService.addLike(id, userId);
     }
+
+    @DeleteMapping("/{id}/like/{userId}")
+    public Film removeLike(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
+        return filmService.removeLike(id, userId);
+    }
+
+    @GetMapping("/popular")
+    public List<Film> getTop10Films(@RequestParam(required = false, defaultValue = "10") int count) {
+        return filmService.getTop10Films(count);
+    }
+
 }
