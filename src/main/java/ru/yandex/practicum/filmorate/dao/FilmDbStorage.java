@@ -128,6 +128,7 @@ public class FilmDbStorage implements FilmStorage {
                         ps.setLong(1, filmId);
                         ps.setLong(2, genres.get(i).getId());
                     }
+
                     public int getBatchSize() {
                         return genres.size();
                     }
