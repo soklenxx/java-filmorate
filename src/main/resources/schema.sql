@@ -44,3 +44,16 @@ CREATE TABLE IF NOT EXISTS user_friendship (
     status bool NOT NULL,
     PRIMARY KEY (id)
 );
+INSERT INTO genre (name)
+VALUES ('Комедия'),
+       ('Драма'),
+       ('Мультфильм'),
+       ('Триллер'),
+       ('Документальный'),
+       ('Боевик');
+INSERT INTO rating_mpa (name)
+VALUES ('G'),
+       ('PG'),
+       ('PG-13'),
+       ('R'),
+       ('NC-17');
