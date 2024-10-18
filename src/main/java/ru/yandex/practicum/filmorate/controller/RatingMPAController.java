@@ -22,6 +22,7 @@ public class RatingMPAController {
     public ResponseEntity<List<RatingMpa>> findAll() {
         return ResponseEntity.ok(ratingMpaService.findAll());
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<RatingMpa> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(ratingMpaService.findById(id));

@@ -23,6 +23,7 @@ public class GenreController {
     public ResponseEntity<List<Genre>> findAll() {
         return ResponseEntity.ok(genreService.findAll());
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<Genre> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(genreService.findById(id));
