@@ -9,9 +9,9 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -20,9 +20,9 @@ public class InMemoryUserStorage implements UserStorage {
     private final Map<Long, User> users = new HashMap<>();
 
     @Override
-    public Collection<User> findAllUsers() {
+    public List<User> findAllUsers() {
         log.info("Request to get Users");
-        return users.values();
+        return users.values().stream().toList();
     }
 
     @Override
@@ -64,6 +64,26 @@ public class InMemoryUserStorage implements UserStorage {
             return users.get(id);
         }
         throw new NotFoundException("Пользователь с id = " + id + " не найден");
+    }
+
+    @Override
+    public User addFriend(Long userId, Long friendId, boolean status) {
+        return null;
+    }
+
+    @Override
+    public User removeFriend(Long userId, Long friendId) {
+        return null;
+    }
+
+    @Override
+    public List<User> getFriends(Long userId) {
+        return List.of();
+    }
+
+    @Override
+    public List<User> getCommonFriends(Long userId, Long friendId) {
+        return List.of();
     }
 
     private void validation(User user) throws ValidationException {

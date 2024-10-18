@@ -5,12 +5,14 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -21,15 +23,14 @@ public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Long, Film> films = new HashMap<>();
 
     @Override
-    public Collection<Film> findAllFilms() {
+    public List<Film> findAllFilms() {
         log.info("Request to get Films");
-        return films.values();
+        return films.values().stream().toList();
     }
 
     @Override
     public Film createFilm(Film film) {
         validation(film);
-        film.setLikesUsers(new HashSet<>());
         log.info("Request to create Film by name {}", film.getName());
         film.setId(getNextId());
         films.put(film.getId(), film);
@@ -61,6 +62,26 @@ public class InMemoryFilmStorage implements FilmStorage {
             return films.get(id);
         }
         throw new NotFoundException("Фильм с id = " + id + " не найден");
+    }
+
+    @Override
+    public Film addLike(Long filmId, Long userId) {
+        return null;
+    }
+
+    @Override
+    public Film removeLike(Long filmId, Long userId) {
+        return null;
+    }
+
+    @Override
+    public List<Film> getTop10Films(int count) {
+        return List.of();
+    }
+
+    @Override
+    public void addGenresToFilm(Long filmId, List<Genre> genres) {
+
     }
 
     private void validation(Film film) throws ValidationException {

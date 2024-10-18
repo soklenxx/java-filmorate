@@ -1,23 +1,20 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
 
-/**
- * Film.
- */
 @Data
 @Builder
-public class Film {
+@NoArgsConstructor
+@AllArgsConstructor
+public class UpdateFilmDto {
     private Long id;
     private String name;
     private String description;
     private LocalDate releaseDate;
     private int duration;
-    private List<Genre> genres;
-    private RatingMpa ratingMPA;
 }
