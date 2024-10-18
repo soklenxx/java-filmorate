@@ -47,7 +47,7 @@ public class FilmService {
         Film filmDb = filmStorage.createFilm(film);
         List<Genre> genres = film.getGenres();
         if (genres != null) {
-            for(Genre genre : genres) {
+            for (Genre genre : genres) {
                 try {
                     genreStorage.findById(genre.getId());
                 } catch (NotFoundException e) {
