@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.RatingMpa;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.sql.Date;
@@ -44,7 +45,7 @@ public class FilmDbStorage implements FilmStorage {
             stmt.setString(2, film.getDescription());
             stmt.setDate(3, Date.valueOf(film.getReleaseDate()));
             stmt.setInt(4, film.getDuration());
-            stmt.setLong(5, film.getRatingMPA() == null ? 0 : film.getRatingMPA().getId());
+            stmt.setLong(5, film.getMpa() == null ? 0 : film.getMpa().getId());
             return stmt;
         }, keyHolder);
         var key = Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -54,7 +55,8 @@ public class FilmDbStorage implements FilmStorage {
                 .description(film.getDescription())
                 .releaseDate(film.getReleaseDate())
                 .duration(film.getDuration())
-                .ratingMPA(film.getRatingMPA())
+                .mpa(film.getMpa())
+                .genres(film.getGenres())
                 .build();
     }
 
@@ -74,7 +76,12 @@ public class FilmDbStorage implements FilmStorage {
         String findByIdQuery = """
                 SELECT * FROM film WHERE id = ?
             """;
-        return jdbcTemplate.queryForObject(findByIdQuery, FilmDbStorage::mapper, id);
+        Film film =  jdbcTemplate.queryForObject(findByIdQuery, FilmDbStorage::mapper, id);
+        if (film != null) {
+            film.setGenres(getGenresFilm(id));
+            film.setMpa(getRatingMpaFilm(id));
+        }
+        return film;
     }
 
     @Override
@@ -127,6 +134,27 @@ public class FilmDbStorage implements FilmStorage {
                 });
     }
 
+    private List<Genre> getGenresFilm(Long filmId) {
+        String queryGetGenresFilm = """
+            SELECT distinct g.*
+            FROM film f JOIN film_genre fg ON f.id = fg.film_id
+            JOIN genre g ON g.id = fg.genre_id
+            WHERE f.id = ?
+        """;
+
+        return jdbcTemplate.query(queryGetGenresFilm, FilmDbStorage::mapperGenre, filmId);
+    }
+
+    private RatingMpa getRatingMpaFilm(Long filmId) {
+        String queryGetGenresFilm = """
+            SELECT distinct rm.*
+            FROM film f JOIN rating_mpa rm ON f.rating_id = rm.id
+            WHERE f.id = ?
+        """;
+
+        return jdbcTemplate.queryForObject(queryGetGenresFilm, FilmDbStorage::mapperRatingMpa, filmId);
+    }
+
     private static Film mapper(ResultSet rs, int rowNum) throws SQLException {
        return Film.builder()
                 .id(rs.getLong(1))
@@ -134,6 +162,20 @@ public class FilmDbStorage implements FilmStorage {
                 .description(rs.getString(3))
                 .releaseDate(rs.getDate(4).toLocalDate())
                 .duration(rs.getInt(5))
+                .build();
+    }
+
+    private static Genre mapperGenre(ResultSet rs, int rowNum) throws SQLException {
+        return Genre.builder()
+                .id(rs.getLong(1))
+                .name(rs.getString(2))
+                .build();
+    }
+
+    private static RatingMpa mapperRatingMpa(ResultSet rs, int rowNum) throws SQLException {
+        return RatingMpa.builder()
+                .id(rs.getLong(1))
+                .name(rs.getString(2))
                 .build();
     }
 }

@@ -99,9 +99,9 @@ public class UserDbStorage implements UserStorage {
     public User removeFriend(Long userId, Long friendId) {
         String queryRemoveFriend = """
                 DELETE FROM user_friendship
-                WHERE request_friend_id = ? and response_friend_id = ? or response_friend_id = ? and request_friend_id = ?
+                WHERE request_friend_id = ? and response_friend_id = ?
         """;
-        jdbcTemplate.update(queryRemoveFriend, userId, friendId, userId, friendId);
+        jdbcTemplate.update(queryRemoveFriend, userId, friendId);
         return getUserById(userId);
     }
 
@@ -109,9 +109,10 @@ public class UserDbStorage implements UserStorage {
     public List<User> getFriends(Long userId) {
         String queryGetFriends = """
             SELECT * FROM "USER" where id IN 
-                (SELECT response_friend_id FROM user_friendship WHERE request_friend_id = ? AND status = true)
+                (SELECT response_friend_id FROM user_friendship WHERE request_friend_id = ?)
                 OR id IN (SELECT request_friend_id FROM user_friendship WHERE response_friend_id = ? AND status = true)
         """;
+        getUserById(userId);
 
         return jdbcTemplate.query(queryGetFriends, UserDbStorage::mapper, userId, userId);
     }

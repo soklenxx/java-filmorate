@@ -40,6 +40,11 @@ public class FilmController {
         return ResponseEntity.ok(filmMapper.map(filmService.findAllFilms()));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<FilmDto> getFilmById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(filmMapper.map(filmService.getFilmById(id)));
+    }
+
     @PostMapping
     public ResponseEntity<FilmDto> create(@RequestBody CreateFilmDto createFilmDto) {
         Film film = filmMapper.map(createFilmDto);

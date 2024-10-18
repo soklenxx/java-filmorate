@@ -5,11 +5,11 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.RatingMpa;
 import ru.yandex.practicum.filmorate.storage.RatingMpaStorage;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -22,12 +22,9 @@ public class RatingMpaDbStorage implements RatingMpaStorage {
             SELECT * FROM rating_mpa WHERE id = ?
         """;
         try {
-            return jdbcTemplate.queryForObject(findRatingMPAByIdQuery, (ResultSet rs, int rowNum) -> RatingMpa.builder()
-                    .id(rs.getLong(1))
-                    .name(rs.getString(2))
-                    .build(), id);
+            return jdbcTemplate.queryForObject(findRatingMPAByIdQuery, RatingMpaDbStorage::mapperRatingMpa, id);
         } catch (IncorrectResultSizeDataAccessException e) {
-            throw new NotFoundException("Такого жанра нет в списке");
+            throw new NotFoundException("Такого рейтинга нет в списке");
         }
     }
 
@@ -36,12 +33,16 @@ public class RatingMpaDbStorage implements RatingMpaStorage {
             SELECT * FROM rating_mpa
         """;
         try {
-            return jdbcTemplate.query(findAllMpaQuery, (ResultSet rs, int rowNum) -> RatingMpa.builder()
-                    .id(rs.getLong(1))
-                    .name(rs.getString(2))
-                    .build());
+            return jdbcTemplate.query(findAllMpaQuery, RatingMpaDbStorage::mapperRatingMpa);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NotFoundException("Список рейтингов пуст.");
         }
+    }
+
+    private static RatingMpa mapperRatingMpa(ResultSet rs, int rowNum) throws SQLException {
+        return RatingMpa.builder()
+                .id(rs.getLong(1))
+                .name(rs.getString(2))
+                .build();
     }
 }

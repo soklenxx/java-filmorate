@@ -16,6 +16,8 @@ public class FilmMapper {
                 .description(dto.getDescription())
                 .releaseDate(dto.getReleaseDate())
                 .duration(dto.getDuration())
+                .genres(dto.getGenres())
+                .mpa(dto.getMpa())
                 .build();
 
     }
@@ -39,7 +41,7 @@ public class FilmMapper {
                 .releaseDate(dto.getReleaseDate())
                 .duration(dto.getDuration())
                 .genres(dto.getGenres())
-                .ratingMPA(dto.getRatingMPA())
+                .mpa(dto.getMpa())
                 .build();
 
     }

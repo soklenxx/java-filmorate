@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.RatingMpa;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
@@ -16,5 +19,6 @@ public class CreateFilmDto {
     private String description;
     private LocalDate releaseDate;
     private int duration;
-    private Long ratingId;
+    List<Genre> genres;
+    private RatingMpa mpa;
 }
