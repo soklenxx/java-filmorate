@@ -74,12 +74,12 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public User getUserById(Long id){
+    public User getUserById(Long id) {
         String findByIdQuery = """
                 SELECT * FROM "USER" WHERE id = ?
             """;
         User user = jdbcTemplate.query(findByIdQuery, UserDbStorage::mapper, id).stream().findAny().orElse(null);
-        if(user == null) {
+        if (user == null) {
             log.debug("Пользователь с id={}  не найден.", id);
             throw new NotFoundException("Пользователь не найден.");
         }
