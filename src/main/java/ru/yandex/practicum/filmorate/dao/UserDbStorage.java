@@ -108,7 +108,7 @@ public class UserDbStorage implements UserStorage {
     @Override
     public List<User> getFriends(Long userId) {
         String queryGetFriends = """
-            SELECT * FROM "USER" where id IN 
+            SELECT * FROM "USER" where id IN
                 (SELECT response_friend_id FROM user_friendship WHERE request_friend_id = ?)
                 OR id IN (SELECT request_friend_id FROM user_friendship WHERE response_friend_id = ? AND status = true)
         """;
