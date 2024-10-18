@@ -19,6 +19,6 @@ public class CreateFilmDto {
     private String description;
     private LocalDate releaseDate;
     private int duration;
-    List<Genre> genres;
+    private List<Genre> genres;
     private RatingMpa mpa;
 }
