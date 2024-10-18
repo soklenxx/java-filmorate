@@ -1,22 +1,22 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
 
     private final UserStorage userStorage;
 
-    public Collection<User> findAllUsers() {
+    public UserService(@Qualifier("userDbStorage") UserStorage userStorage) {
+        this.userStorage = userStorage;
+    }
+
+    public List<User> findAllUsers() {
         return userStorage.findAllUsers();
     }
 
@@ -31,33 +31,26 @@ public class UserService {
     public User addFriend(Long userId, Long friendId) {
         User user = userStorage.getUserById(userId);
         User friend = userStorage.getUserById(friendId);
-        user.getFriends().add(friend.getId());
-        friend.getFriends().add(user.getId());
+        if (getFriends(friendId).contains(user)) {
+            userStorage.addFriend(userId, friendId, true);
+            return user;
+        }
+        userStorage.addFriend(userId, friendId, false);
         return user;
     }
 
     public User removeFriend(Long userId, Long friendId) {
         User user = userStorage.getUserById(userId);
         User friend = userStorage.getUserById(friendId);
-        user.getFriends().remove(friend.getId());
-        friend.getFriends().remove(user.getId());
+        userStorage.removeFriend(userId, friendId);
         return user;
     }
 
     public List<User> getFriends(Long userId) {
-        User user = userStorage.getUserById(userId);
-        return user.getFriends().stream().map(userStorage::getUserById).toList();
+        return userStorage.getFriends(userId);
     }
 
     public List<User> getCommonFriends(Long userId, Long friendId) {
-        User user = userStorage.getUserById(userId);
-        User friend = userStorage.getUserById(friendId);
-        Set<Long> commonFriends = userStorage.getUserById(user.getId()).getFriends();
-        List<User> commonFriendsSet = new ArrayList<>();
-        commonFriends.retainAll(userStorage.getUserById(friend.getId()).getFriends());
-        for (Long commonFriend : commonFriends) {
-            commonFriendsSet.add(userStorage.getUserById(commonFriend));
-        }
-        return commonFriendsSet;
+        return userStorage.getCommonFriends(userId, friendId);
     }
 }
