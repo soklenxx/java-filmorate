@@ -18,6 +18,7 @@ import java.util.List;
 @RequestMapping("/mpa")
 public class RatingMPAController {
     private final RatingMpaService ratingMpaService;
+
     @GetMapping
     public ResponseEntity<List<RatingMpa>> findAll() {
         return ResponseEntity.ok(ratingMpaService.findAll());
