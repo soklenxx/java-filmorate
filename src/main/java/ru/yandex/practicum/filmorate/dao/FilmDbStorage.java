@@ -85,21 +85,21 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public Film addLike(Long filmId, Long userId) {
+    public void addLike(Long filmId, Long userId) {
         String queryAddLike = """
                 INSERT INTO film_like (USER_ID, FILM_ID) values (?,?)
             """;
         jdbcTemplate.update(queryAddLike, userId, filmId);
-        return getFilmById(filmId);
+        getFilmById(filmId);
     }
 
     @Override
-    public Film removeLike(Long filmId, Long userId) {
+    public void removeLike(Long filmId, Long userId) {
         String queryRemoveLike = """
             DELETE FROM film_like WHERE film_id = ? and user_id = ?
         """;
         jdbcTemplate.update(queryRemoveLike, filmId, userId);
-        return getFilmById(filmId);
+        getFilmById(filmId);
     }
 
     @Override

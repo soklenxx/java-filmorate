@@ -9,9 +9,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -65,13 +63,11 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film addLike(Long filmId, Long userId) {
-        return null;
+    public void addLike(Long filmId, Long userId) {
     }
 
     @Override
-    public Film removeLike(Long filmId, Long userId) {
-        return null;
+    public void removeLike(Long filmId, Long userId) {
     }
 
     @Override

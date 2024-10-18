@@ -87,22 +87,22 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public User addFriend(Long userId, Long friendId, boolean status) {
+    public void addFriend(Long userId, Long friendId, boolean status) {
         String queryAddFriend = """
                 INSERT INTO user_friendship (request_friend_id, response_friend_id, status) values (?,?,?)
             """;
         jdbcTemplate.update(queryAddFriend, userId, friendId, status);
-        return getUserById(userId);
+        getUserById(userId);
     }
 
     @Override
-    public User removeFriend(Long userId, Long friendId) {
+    public void removeFriend(Long userId, Long friendId) {
         String queryRemoveFriend = """
                 DELETE FROM user_friendship
                 WHERE request_friend_id = ? and response_friend_id = ?
         """;
         jdbcTemplate.update(queryRemoveFriend, userId, friendId);
-        return getUserById(userId);
+        getUserById(userId);
     }
 
     @Override
