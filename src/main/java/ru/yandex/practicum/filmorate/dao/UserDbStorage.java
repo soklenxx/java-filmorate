@@ -30,7 +30,7 @@ public class UserDbStorage implements UserStorage {
         String findAllQuery = """
                 SELECT * FROM "USER"
             """;
-        return jdbcTemplate.query(findAllQuery, UserDbStorage::mapper);
+        return jdbcTemplate.query(findAllQuery, UserDbStorage::toMap);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class UserDbStorage implements UserStorage {
         String findByIdQuery = """
                 SELECT * FROM "USER" WHERE id = ?
             """;
-        User user = jdbcTemplate.query(findByIdQuery, UserDbStorage::mapper, id).stream().findAny().orElse(null);
+        User user = jdbcTemplate.query(findByIdQuery, UserDbStorage::toMap, id).stream().findAny().orElse(null);
         if (user == null) {
             log.debug("Пользователь с id={}  не найден.", id);
             throw new NotFoundException("Пользователь не найден.");
@@ -114,7 +114,7 @@ public class UserDbStorage implements UserStorage {
         """;
         getUserById(userId);
 
-        return jdbcTemplate.query(queryGetFriends, UserDbStorage::mapper, userId, userId);
+        return jdbcTemplate.query(queryGetFriends, UserDbStorage::toMap, userId, userId);
     }
 
     @Override
@@ -126,10 +126,10 @@ public class UserDbStorage implements UserStorage {
                 OR id IN (SELECT request_friend_id FROM user_friendship WHERE response_friend_id = ? AND status = true))
         """;
 
-        return jdbcTemplate.query(query, UserDbStorage::mapper, friendId, userId, friendId, userId);
+        return jdbcTemplate.query(query, UserDbStorage::toMap, friendId, userId, friendId, userId);
     }
 
-    private static User mapper(ResultSet rs, int rowNum) throws SQLException {
+    private static User toMap(ResultSet rs, int rowNum) throws SQLException {
         return User.builder()
                 .id(rs.getLong(1))
                 .email(rs.getString(2))

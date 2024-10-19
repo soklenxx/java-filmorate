@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 public class UserMapper {
-    public User map(CreateUserDto dto) {
+    public User toMap(CreateUserDto dto) {
         return User.builder()
                 .email(dto.getEmail())
                 .login(dto.getLogin())
@@ -20,7 +20,7 @@ public class UserMapper {
 
     }
 
-    public User map(UpdateUserDto dto) {
+    public User toMap(UpdateUserDto dto) {
         return User.builder()
                 .id(dto.getId())
                 .email(dto.getEmail())
@@ -31,7 +31,7 @@ public class UserMapper {
 
     }
 
-    public UserDto map(User dto) {
+    public UserDto toMap(User dto) {
         return UserDto.builder()
                 .id(dto.getId())
                 .email(dto.getEmail())
@@ -42,9 +42,9 @@ public class UserMapper {
 
     }
 
-    public List<UserDto> map(List<User> films) {
+    public List<UserDto> toMap(List<User> films) {
         return films.stream()
-                .map(this::map)
+                .map(this::toMap)
                 .toList();
     }
 }

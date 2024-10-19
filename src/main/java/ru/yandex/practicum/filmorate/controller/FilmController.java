@@ -37,48 +37,48 @@ public class FilmController {
 
     @GetMapping
     public ResponseEntity<List<FilmDto>> findAll() {
-        return ResponseEntity.ok(filmMapper.map(filmService.findAllFilms()));
+        return ResponseEntity.ok(filmMapper.toMap(filmService.findAllFilms()));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<FilmDto> getFilmById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(filmMapper.map(filmService.getFilmById(id)));
+        return ResponseEntity.ok(filmMapper.toMap(filmService.getFilmById(id)));
     }
 
     @PostMapping
     public ResponseEntity<FilmDto> create(@RequestBody CreateFilmDto createFilmDto) {
-        Film film = filmMapper.map(createFilmDto);
-        validation(film);
+        Film film = filmMapper.toMap(createFilmDto);
+        validate(film);
         Film createdFilm = filmService.createFilm(film);
-        return ResponseEntity.ok(filmMapper.map(createdFilm));
+        return ResponseEntity.ok(filmMapper.toMap(createdFilm));
     }
 
     @PutMapping
     public ResponseEntity<FilmDto> update(@RequestBody UpdateFilmDto updateFilmDto) {
-        Film film = filmMapper.map(updateFilmDto);
-        validation(film);
+        Film film = filmMapper.toMap(updateFilmDto);
+        validate(film);
         Film updatedFilm = filmService.updateFilm(film);
-        return ResponseEntity.ok(filmMapper.map(updatedFilm));
+        return ResponseEntity.ok(filmMapper.toMap(updatedFilm));
     }
 
     @PutMapping("/{id}/like/{userId}")
     public ResponseEntity<FilmDto> addLike(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
         Film addLike = filmService.addLike(id, userId);
-        return ResponseEntity.ok(filmMapper.map(addLike));
+        return ResponseEntity.ok(filmMapper.toMap(addLike));
     }
 
     @DeleteMapping("/{id}/like/{userId}")
     public ResponseEntity<FilmDto> removeLike(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
         Film removeLike = filmService.removeLike(id, userId);
-        return ResponseEntity.ok(filmMapper.map(removeLike));
+        return ResponseEntity.ok(filmMapper.toMap(removeLike));
     }
 
     @GetMapping("/popular")
     public ResponseEntity<List<FilmDto>> getTop10Films(@RequestParam(required = false, defaultValue = "10") int count) {
-        return ResponseEntity.ok(filmMapper.map(filmService.getTop10Films(count)));
+        return ResponseEntity.ok(filmMapper.toMap(filmService.getTop10Films(count)));
     }
 
-    private void validation(Film film) throws ValidationException {
+    private void validate(Film film) throws ValidationException {
         if (film.getName() == null || film.getName().isEmpty()) {
             log.error("Empty Film name");
             throw new ValidationException("Название не может быть пустым");

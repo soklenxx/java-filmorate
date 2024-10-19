@@ -30,7 +30,7 @@ public class FilmDbStorage implements FilmStorage {
         String findAllQuery = """
                 SELECT * FROM film
             """;
-        return jdbcTemplate.query(findAllQuery, FilmDbStorage::mapper);
+        return jdbcTemplate.query(findAllQuery, FilmDbStorage::toMap);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class FilmDbStorage implements FilmStorage {
         String findByIdQuery = """
                 SELECT * FROM film WHERE id = ?
             """;
-        Film film =  jdbcTemplate.queryForObject(findByIdQuery, FilmDbStorage::mapper, id);
+        Film film =  jdbcTemplate.queryForObject(findByIdQuery, FilmDbStorage::toMap, id);
         if (film != null) {
             film.setGenres(getGenresFilm(id));
             film.setMpa(getRatingMpaFilm(id));
@@ -112,7 +112,7 @@ public class FilmDbStorage implements FilmStorage {
             order by COUNT(fl.user_id) DESC limit ?
         """;
 
-        return jdbcTemplate.query(queryGetTop10Films, FilmDbStorage::mapper, count);
+        return jdbcTemplate.query(queryGetTop10Films, FilmDbStorage::toMap, count);
     }
 
     @Override
@@ -143,7 +143,7 @@ public class FilmDbStorage implements FilmStorage {
             WHERE f.id = ?
         """;
 
-        return jdbcTemplate.query(queryGetGenresFilm, FilmDbStorage::mapperGenre, filmId);
+        return jdbcTemplate.query(queryGetGenresFilm, FilmDbStorage::toMapGenre, filmId);
     }
 
     private RatingMpa getRatingMpaFilm(Long filmId) {
@@ -153,10 +153,10 @@ public class FilmDbStorage implements FilmStorage {
             WHERE f.id = ?
         """;
 
-        return jdbcTemplate.queryForObject(queryGetGenresFilm, FilmDbStorage::mapperRatingMpa, filmId);
+        return jdbcTemplate.queryForObject(queryGetGenresFilm, FilmDbStorage::toMapRatingMpa, filmId);
     }
 
-    private static Film mapper(ResultSet rs, int rowNum) throws SQLException {
+    private static Film toMap(ResultSet rs, int rowNum) throws SQLException {
        return Film.builder()
                 .id(rs.getLong(1))
                 .name(rs.getString(2))
@@ -166,14 +166,14 @@ public class FilmDbStorage implements FilmStorage {
                 .build();
     }
 
-    private static Genre mapperGenre(ResultSet rs, int rowNum) throws SQLException {
+    private static Genre toMapGenre(ResultSet rs, int rowNum) throws SQLException {
         return Genre.builder()
                 .id(rs.getLong(1))
                 .name(rs.getString(2))
                 .build();
     }
 
-    private static RatingMpa mapperRatingMpa(ResultSet rs, int rowNum) throws SQLException {
+    private static RatingMpa toMapRatingMpa(ResultSet rs, int rowNum) throws SQLException {
         return RatingMpa.builder()
                 .id(rs.getLong(1))
                 .name(rs.getString(2))

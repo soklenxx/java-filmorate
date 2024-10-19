@@ -22,7 +22,7 @@ public class RatingMpaDbStorage implements RatingMpaStorage {
             SELECT * FROM rating_mpa WHERE id = ?
         """;
         try {
-            return jdbcTemplate.queryForObject(findRatingMPAByIdQuery, RatingMpaDbStorage::mapperRatingMpa, id);
+            return jdbcTemplate.queryForObject(findRatingMPAByIdQuery, RatingMpaDbStorage::toMapRatingMpa, id);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NotFoundException("Такого рейтинга нет в списке");
         }
@@ -33,13 +33,13 @@ public class RatingMpaDbStorage implements RatingMpaStorage {
             SELECT * FROM rating_mpa
         """;
         try {
-            return jdbcTemplate.query(findAllMpaQuery, RatingMpaDbStorage::mapperRatingMpa);
+            return jdbcTemplate.query(findAllMpaQuery, RatingMpaDbStorage::toMapRatingMpa);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NotFoundException("Список рейтингов пуст.");
         }
     }
 
-    private static RatingMpa mapperRatingMpa(ResultSet rs, int rowNum) throws SQLException {
+    private static RatingMpa toMapRatingMpa(ResultSet rs, int rowNum) throws SQLException {
         return RatingMpa.builder()
                 .id(rs.getLong(1))
                 .name(rs.getString(2))

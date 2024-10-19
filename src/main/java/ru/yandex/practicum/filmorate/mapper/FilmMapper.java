@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 public class FilmMapper {
-    public Film map(CreateFilmDto dto) {
+    public Film toMap(CreateFilmDto dto) {
         return Film.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
@@ -22,7 +22,7 @@ public class FilmMapper {
 
     }
 
-    public Film map(UpdateFilmDto dto) {
+    public Film toMap(UpdateFilmDto dto) {
         return Film.builder()
                 .id(dto.getId())
                 .name(dto.getName())
@@ -33,7 +33,7 @@ public class FilmMapper {
 
     }
 
-    public FilmDto map(Film dto) {
+    public FilmDto toMap(Film dto) {
         return FilmDto.builder()
                 .id(dto.getId())
                 .name(dto.getName())
@@ -46,9 +46,9 @@ public class FilmMapper {
 
     }
 
-    public List<FilmDto> map(List<Film> films) {
+    public List<FilmDto> toMap(List<Film> films) {
         return films.stream()
-                .map(this::map)
+                .map(this::toMap)
                 .toList();
     }
 }

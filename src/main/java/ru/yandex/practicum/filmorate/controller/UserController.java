@@ -33,46 +33,46 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<UserDto>> findAll() {
-        return ResponseEntity.ok(userMapper.map(userService.findAllUsers()));
+        return ResponseEntity.ok(userMapper.toMap(userService.findAllUsers()));
     }
 
     @PostMapping
     public ResponseEntity<UserDto> create(@RequestBody CreateUserDto createUserDto) {
-        User user = userMapper.map(createUserDto);
-        validation(user);
+        User user = userMapper.toMap(createUserDto);
+        validate(user);
         User createdUser = userService.createUser(user);
-        return ResponseEntity.ok(userMapper.map(createdUser));
+        return ResponseEntity.ok(userMapper.toMap(createdUser));
     }
 
     @PutMapping
     public ResponseEntity<UserDto> update(@RequestBody UpdateUserDto updateUserDto) {
-        User user = userMapper.map(updateUserDto);
-        validation(user);
+        User user = userMapper.toMap(updateUserDto);
+        validate(user);
         User updatedUser = userService.updateUser(user);
-        return ResponseEntity.ok(userMapper.map(updatedUser));
+        return ResponseEntity.ok(userMapper.toMap(updatedUser));
     }
 
     @PutMapping("/{id}/friends/{friendId}")
     public ResponseEntity<UserDto> addFriend(@PathVariable("id") Long id, @PathVariable("friendId") Long friendId) {
-        return ResponseEntity.ok(userMapper.map(userService.addFriend(id, friendId)));
+        return ResponseEntity.ok(userMapper.toMap(userService.addFriend(id, friendId)));
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
     public ResponseEntity<UserDto> removeFriend(@PathVariable("id") Long id, @PathVariable("friendId") Long friendId) {
-        return ResponseEntity.ok(userMapper.map(userService.removeFriend(id, friendId)));
+        return ResponseEntity.ok(userMapper.toMap(userService.removeFriend(id, friendId)));
     }
 
     @GetMapping("{id}/friends")
     public ResponseEntity<List<UserDto>> getFriends(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(userMapper.map(userService.getFriends(id)));
+        return ResponseEntity.ok(userMapper.toMap(userService.getFriends(id)));
     }
 
     @GetMapping("{id}/friends/common/{otherId}")
     public ResponseEntity<List<UserDto>> getCommonFriends(@PathVariable("id") Long id, @PathVariable("otherId") Long otherId) {
-        return ResponseEntity.ok(userMapper.map(userService.getCommonFriends(id, otherId)));
+        return ResponseEntity.ok(userMapper.toMap(userService.getCommonFriends(id, otherId)));
     }
 
-    private void validation(User user) throws ValidationException {
+    private void validate(User user) throws ValidationException {
         if (user.getEmail() == null || user.getEmail().isBlank()) {
             log.error("Empty User email");
             throw new ValidationException("Имейл должен быть указан");

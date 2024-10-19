@@ -23,7 +23,7 @@ public class GenreDbStorage implements GenreStorage {
             SELECT * FROM genre WHERE id = ?
         """;
         try {
-            return jdbcTemplate.queryForObject(sql, GenreDbStorage::mapperGenre, id);
+            return jdbcTemplate.queryForObject(sql, GenreDbStorage::toMapGenre, id);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NotFoundException("Такого жанра нет в списке");
         }
@@ -35,13 +35,13 @@ public class GenreDbStorage implements GenreStorage {
             SELECT * FROM genre
         """;
         try {
-            return jdbcTemplate.query(sql,GenreDbStorage::mapperGenre);
+            return jdbcTemplate.query(sql,GenreDbStorage::toMapGenre);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NotFoundException("Список жанров пуст.");
         }
     }
 
-    private static Genre mapperGenre(ResultSet rs, int rowNum) throws SQLException {
+    private static Genre toMapGenre(ResultSet rs, int rowNum) throws SQLException {
         return Genre.builder()
                 .id(rs.getLong(1))
                 .name(rs.getString(2))
